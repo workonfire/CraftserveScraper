@@ -3,7 +3,7 @@ from colorama import init, deinit, Fore, Style
 from server import Server, ServerDoesNotExist
 from time import strftime
 
-__VERSION__ = '1.0.0'
+__VERSION__ = '1.0.1'
 __AUTHOR__ = 'workonfire'
 
 def color_print(color, text):
@@ -68,6 +68,7 @@ def main():
     if verbosity == 'n' and logging == 'n':
         color_print(Fore.RED, "WARN: Logging and verbosity is disabled. What is the point of that..?")
 
+    color_print(Fore.CYAN, "\nScraper launched!\n")
     for server_id in range(int(lower_bound), int(upper_bound)):
         try:
             print("Querying {}/{}...".format(str(server_id), upper_bound))
@@ -85,35 +86,37 @@ def main():
                     continue
                 if plugins_filter == 'y' and not any(plugin in server.plugins for plugin in filtered_plugins):
                     continue
+            try:
+                if logging == 'y':
+                    with open('logs.txt', 'a') as log_file:
+                        log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- FOUND! -----\n"
+                                       "Name: " + server.name + "\n"
+                                       "Address: " + ("none" if server.address is None else server.address) + "\n"
+                                       "Is running: " + ("yes" if server.running else "no")  + "\n"
+                                       "Players: " + str(server.online_now) + "/" + str(server.max_online) + "\n"
+                                       "Type: " + server.type + "\n"
+                                       "Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date) + "\n"
+                                       "Price: " + ("none" if server.price is None else server.price) + "\n")
+                        if server.special_query:
+                            log_file.write("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
+                        log_file.write("\n")
 
-            if logging == 'y':
-                with open('logs.txt', 'a') as log_file:
-                    log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- FOUND! -----\n"
-                                   "Name: " + server.name + "\n"
-                                   "Address: " + ("none" if server.address is None else server.address) + "\n"
-                                   "Is running: " + ("yes" if server.running else "no")  + "\n"
-                                   "Players: " + str(server.online_now) + "/" + str(server.max_online) + "\n"
-                                   "Type: " + server.type + "\n"
-                                   "Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date) + "\n"
-                                   "Price: " + ("none" if server.price is None else server.price) + "\n")
+                if verbosity == 'y':
+                    color_print(Fore.GREEN, "----- FOUND! -----")
+                    print("Name: " + server.name)
+                    print("Address: " + ("none" if server.address is None else server.address))
+                    print("Is running: " + ("yes" if server.running else "no"))
+                    print("Players: " + str(server.online_now) + "/" + str(server.max_online))
+                    print("Type: " + server.type)
+                    print("Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date))
+                    print("Price: " + ("none" if server.price is None else server.price))
                     if server.special_query:
-                        log_file.write("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
-                    log_file.write("\n")
-
-            if verbosity == 'y':
-                color_print(Fore.GREEN, "----- FOUND! -----")
-                print("Name: " + server.name)
-                print("Address: " + ("none" if server.address is None else server.address))
-                print("Is running: " + ("yes" if server.running else "no"))
-                print("Players: " + str(server.online_now) + "/" + str(server.max_online))
-                print("Type: " + server.type)
-                print("Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date))
-                print("Price: " + ("none" if server.price is None else server.price))
-                if server.special_query:
-                    print("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
-                color_print(Fore.RED, "----- END -----")
-            else:
-                color_print(Fore.GREEN, "MATCH FOUND: " + str(server_id))
+                        print("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
+                    color_print(Fore.RED, "----- END -----")
+                else:
+                    color_print(Fore.GREEN, "MATCH FOUND: " + str(server_id))
+            except AttributeError:
+                color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server_id))
         except ServerDoesNotExist:
             pass
 

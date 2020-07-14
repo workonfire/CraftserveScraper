@@ -43,9 +43,12 @@ class Server:
         self.name = server_name
         self.online_now = online_now
         self.max_online = max_online
-        self.type = server_details[0]
-        self.expiration_date = None if server_state == "OFF" else server_details[1]
-        self.price = server_details[1] if server_state == "OFF" else server_details[2]
+        try:
+            self.type = server_details[0]
+            self.expiration_date = None if server_state == "OFF" else server_details[1]
+            self.price = server_details[1] if server_state == "OFF" else server_details[2]
+        except IndexError:
+            pass
 
         if special_query and server_address is not None:
             details = requests.get("https://api.mcsrvstat.us/2/" + server_address).json()
