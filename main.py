@@ -3,7 +3,7 @@ from colorama import init, deinit, Fore, Style
 from server import Server, ServerDoesNotExist
 from time import strftime
 
-__VERSION__ = '1.0.1'
+__VERSION__ = '1.0.2'
 __AUTHOR__ = 'workonfire'
 
 def color_print(color, text):
@@ -73,7 +73,7 @@ def main():
         try:
             print("Querying {}/{}...".format(str(server_id), upper_bound))
 
-            server = Server(server_id, special_query=special_query, primitive_address=True)
+            server = Server(server_id, special_query=special_query)
 
             if filtering == 'y':
                 if online_filter == 'y' and not server.running:
@@ -89,7 +89,8 @@ def main():
             try:
                 if logging == 'y':
                     with open('logs.txt', 'a') as log_file:
-                        log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- FOUND! -----\n"
+                        log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- MATCH FOUND! -----\n"
+                                       "ID: " + str(server.id) + "\n"
                                        "Name: " + server.name + "\n"
                                        "Address: " + ("none" if server.address is None else server.address) + "\n"
                                        "Is running: " + ("yes" if server.running else "no")  + "\n"
@@ -102,7 +103,8 @@ def main():
                         log_file.write("\n")
 
                 if verbosity == 'y':
-                    color_print(Fore.GREEN, "----- FOUND! -----")
+                    color_print(Fore.GREEN, "----- MATCH FOUND! -----")
+                    print("ID: " + str(server.id))
                     print("Name: " + server.name)
                     print("Address: " + ("none" if server.address is None else server.address))
                     print("Is running: " + ("yes" if server.running else "no"))
@@ -114,9 +116,9 @@ def main():
                         print("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
                     color_print(Fore.RED, "----- END -----")
                 else:
-                    color_print(Fore.GREEN, "MATCH FOUND: " + str(server_id))
-            except AttributeError:
-                color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server_id))
+                    color_print(Fore.GREEN, "MATCH FOUND: " + str(server.id))
+            except (AttributeError, UnicodeEncodeError):
+                color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server.id))
         except ServerDoesNotExist:
             pass
 
