@@ -2,17 +2,21 @@ import requests
 from urllib3 import disable_warnings, exceptions
 from bs4 import BeautifulSoup
 
+
 class ServerDoesNotExist(Exception):
     pass
 
+
 class Server:
-    def __init__(self, craftserve_id, primitive_address = False, special_query = False):
+    def __init__(self, craftserve_id, primitive_address=False, special_query=False):
         self.primitive_address = primitive_address
         self.special_query = special_query
         disable_warnings(exceptions.InsecureRequestWarning)
         request_headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36",
-            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9"}
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) "
+                          "Chrome/83.0.4103.116 Safari/537.36",
+            "Accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,"
+                      "application/signed-exchange;v=b3;q=0.9"}
         request = requests.get("https://craftserve.pl/s/" + str(craftserve_id), headers=request_headers, verify=False)
         soup = BeautifulSoup(request.text, 'html.parser')
 
@@ -58,6 +62,7 @@ class Server:
             self.motd = [] if not details['online'] else details['motd']['clean']
             self.online_list = [] if online_now == 0 else details['players']['list']
             try:
-                self.plugins = [] if not details['online'] or not details['debug']['query'] else details['plugins']['raw']
-            except KeyError: # Something weird happened.
+                self.plugins = [] if not details['online'] or not details['debug']['query'] else details['plugins'][
+                    'raw']
+            except KeyError:  # Something weird happened.
                 self.plugins = []

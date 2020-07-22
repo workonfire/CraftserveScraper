@@ -6,17 +6,19 @@ from time import strftime
 __VERSION__ = '1.0.2'
 __AUTHOR__ = 'workonfire'
 
+
 def color_print(color, text):
-    init(autoreset = True)
+    init(autoreset=True)
     print(Style.BRIGHT + color + text)
     deinit()
+
 
 def main():
     banner = ["   ______           ______                          ",
               "  / ____/________ _/ __/ /_________  ______   _____ ",
-              " / /   / ___/ __ `/ /_/ __/ ___/ _ \/ ___/ | / / _ \\",
+              " / /   / ___/ __ `/ /_/ __/ ___/ _ \\/ ___/ | / / _ \\",
               "/ /___/ /  / /_/ / __/ /_(__  )  __/ /   | |/ /  __/",
-              "\____/_/   \__,_/_/  \__/____/\___/_/    |___/\___/ "]
+              "\\____/_/   \\__,_/_/  \\__/____/\\___/_/    |___/\\___/ "]
 
     for line in banner:
         color_print(Fore.GREEN, line)
@@ -61,9 +63,11 @@ def main():
                     break
                 else:
                     filtered_plugins.append(filtered_plugin)
-        if online_mode_filter == 'y' or plugins_filter =='y':
+        if online_mode_filter == 'y' or plugins_filter == 'y':
             special_query = True
-            color_print(Fore.RED, "WARN: Filtering by online mode or plugins or version might cause the program to query the server longer.")
+            color_print(Fore.RED,
+                        "WARN: Filtering by online mode or plugins or version might cause the program to query the "
+                        "server longer.")
             color_print(Fore.RED, "It is better to not use this option, unless you really have to.")
     if verbosity == 'n' and logging == 'n':
         color_print(Fore.RED, "WARN: Logging and verbosity is disabled. What is the point of that..?")
@@ -90,30 +94,33 @@ def main():
                 if logging == 'y':
                     with open('logs.txt', 'a') as log_file:
                         log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- MATCH FOUND! -----\n"
-                                       "ID: " + str(server.id) + "\n"
-                                       "Name: " + server.name + "\n"
-                                       "Address: " + ("none" if server.address is None else server.address) + "\n"
-                                       "Is running: " + ("yes" if server.running else "no")  + "\n"
-                                       "Players: " + str(server.online_now) + "/" + str(server.max_online) + "\n"
-                                       "Type: " + server.type + "\n"
-                                       "Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date) + "\n"
-                                       "Price: " + ("none" if server.price is None else server.price) + "\n")
+                                       "ID: {}\n".format(server.id) +
+                                       "Name: {}\n".format(server.name) +
+                                       "Address: {}\n".format("none" if server.address is None else server.address) +
+                                       "Is running: {}\n".format("yes" if server.running else "no") +
+                                       "Players: {}/{}\n".format(str(server.online_now), str(server.max_online)) +
+                                       "Type: {}\n".format(server.type) +
+                                       "Expiration date: {}\n".format(
+                                           "none" if server.expiration_date is None else server.expiration_date) +
+                                       "Price: {}\n".format("none" if server.price is None else server.price))
                         if server.special_query:
-                            log_file.write("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
+                            log_file.write("Plugin list: {}".format(
+                                ', '.join([str(plugin) for plugin in server.plugins])))
                         log_file.write("\n")
 
                 if verbosity == 'y':
                     color_print(Fore.GREEN, "----- MATCH FOUND! -----")
-                    print("ID: " + str(server.id))
-                    print("Name: " + server.name)
-                    print("Address: " + ("none" if server.address is None else server.address))
-                    print("Is running: " + ("yes" if server.running else "no"))
-                    print("Players: " + str(server.online_now) + "/" + str(server.max_online))
-                    print("Type: " + server.type)
-                    print("Expiration date: " + ("none" if server.expiration_date is None else server.expiration_date))
-                    print("Price: " + ("none" if server.price is None else server.price))
+                    print("ID: {}".format(server.id))
+                    print("Name: {}".format(server.name))
+                    print("Address: {}".format("none" if server.address is None else server.address))
+                    print("Is running: {}".format("yes" if server.running else "no"))
+                    print("Players: {}/{}".format(str(server.online_now), str(server.max_online)))
+                    print("Type: {}".format(server.type))
+                    print("Expiration date: {}".format(
+                        "none" if server.expiration_date is None else server.expiration_date))
+                    print("Price: {}".format("none" if server.price is None else server.price))
                     if server.special_query:
-                        print("Plugin list: " + ', '.join([str(plugin) for plugin in server.plugins]))
+                        print("Plugin list: {}".format(', '.join([str(plugin) for plugin in server.plugins])))
                     color_print(Fore.RED, "----- END -----")
                 else:
                     color_print(Fore.GREEN, "MATCH FOUND: " + str(server.id))
@@ -121,6 +128,7 @@ def main():
                 color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server.id))
         except ServerDoesNotExist:
             pass
+
 
 if __name__ == '__main__':
     try:
