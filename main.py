@@ -3,7 +3,7 @@ from colorama import init, deinit, Fore, Style
 from server import Server, ServerDoesNotExist
 from time import strftime
 
-__VERSION__ = '1.0.2'
+__VERSION__ = '1.0.3'
 __AUTHOR__ = 'workonfire'
 
 
@@ -33,7 +33,6 @@ def main():
         except ValueError:
             color_print(Fore.RED, "Incorrect format.")
 
-    # Filter wizard
     logging = input("Enable logging? (y/n) ")
     verbosity = input("Enable verbosity? (y/n) ")
     filtering = input("Enable filtering? (y/n) ")
@@ -55,7 +54,7 @@ def main():
         online_mode_filter = input("Filter by online mode? (y/n) ")
         plugins_filter = input("Filter by plugins? (y/n) ")
         if plugins_filter == 'y':
-            print("Please type the plugin name with the appropriate version, e.g. Essentials 2.17.2.146.")
+            print("Please type the plugin name, e.g. EssentialsX.")
             print("If you want to finish, type \"end\".")
             while True:
                 filtered_plugin = input(">> ")

@@ -28,13 +28,14 @@ class Server:
         online_now = int(soup.find("div", {"class": "progress-bar"})['aria-valuemin'])
         max_online = int(
             str(soup.find("span", {"style": "font-weight: bold;font-size: 16px;color: #9f9f9f;"}).getText()).strip("/"))
+        primitive_address_value = "s{}.csrv.pl".format(craftserve_id)
         if primitive_address:
-            server_address = "s{}.csrv.pl".format(craftserve_id)
+            server_address = primitive_address_value
         else:
             try:
                 server_address = str(soup.find("div", {"class": "zielony-txt"}).getText()).rstrip()
             except AttributeError:
-                server_address = None
+                server_address = primitive_address_value
 
         unparsed_server_details = soup.find_all("div", {"class": "staty-text col-md-6"})
         server_details = []
@@ -61,8 +62,8 @@ class Server:
             self.port = details['port']
             self.motd = [] if not details['online'] else details['motd']['clean']
             self.online_list = [] if online_now == 0 else details['players']['list']
-            try:
+            try: # WARNING: This is shit.
                 self.plugins = [] if not details['online'] or not details['debug']['query'] else details['plugins'][
-                    'raw']
+                    'names']
             except KeyError:  # Something weird happened.
                 self.plugins = []
