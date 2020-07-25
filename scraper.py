@@ -83,20 +83,20 @@ def main():
 
             server = Server(server_id, special_query=special_query)
 
-            if filtering == 'y':
-                if online_filter == 'y' and not server.running:
-                    continue
-                if max_players_filter == 'y' and not max_players_filter_value == server.max_online:
-                    continue
-                if server_type_filter != 'all' and not server_type_filter == str(server.type).lower():
-                    continue
-                if online_mode_filter == 'y' and not server.online_mode:
-                    continue
-                if server_version_filter == 'y' and not server.version == server_version_filter_value:
-                    continue
-                if plugins_filter == 'y' and not any(plugin in server.plugins for plugin in filtered_plugins):
-                    continue
             try:
+                if filtering == 'y':
+                    if online_filter == 'y' and not server.running:
+                        continue
+                    if max_players_filter == 'y' and not max_players_filter_value == server.max_online:
+                        continue
+                    if server_type_filter != 'all' and not server_type_filter == str(server.type).lower():
+                        continue
+                    if online_mode_filter == 'y' and not server.online_mode:
+                        continue
+                    if server_version_filter == 'y' and not server.version == server_version_filter_value:
+                        continue
+                    if plugins_filter == 'y' and not any(plugin in server.plugins for plugin in filtered_plugins):
+                        continue
                 if logging == 'y':
                     with open('logs.txt', 'a') as log_file:
                         log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- MATCH FOUND! -----\n"

@@ -1,6 +1,7 @@
 import requests
 from urllib3 import disable_warnings, exceptions
 from bs4 import BeautifulSoup
+from json.decoder import JSONDecodeError
 
 
 class ServerDoesNotExist(Exception):
@@ -52,11 +53,14 @@ class Server:
         # Using REST API.
         if self.running:
             rest_request_headers = {"Accept": "application/json"}
-            rest_request = requests.get("https://craftserve.pl/s/" + str(self.id), headers=rest_request_headers,
-                                        verify=False).json()
-            self.version = rest_request['engine'][1]
-            self.wallet = str(rest_request['wallet']['float']) + " " + rest_request['wallet']['currency']
-            self.expiration_date = rest_request['expire_date']
+            try:
+                rest_request = requests.get("https://craftserve.pl/s/" + str(self.id), headers=rest_request_headers,
+                                            verify=False).json()
+                self.version = rest_request['engine'][1]
+                self.wallet = str(rest_request['wallet']['float']) + " " + rest_request['wallet']['currency']
+                self.expiration_date = rest_request['expire_date']
+            except JSONDecodeError:
+                pass
         else:
             self.version = None
             self.wallet = None
