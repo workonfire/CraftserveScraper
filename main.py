@@ -43,16 +43,21 @@ def main():
     server_type_filter = 'all'
     online_mode_filter = 'n'
     plugins_filter = 'n'
+    server_version_filter = 'n'
+    server_version_filter_value = None
     filtered_plugins = []
 
     if filtering == 'y':
-        online_filter = input("Filter by online servers? (y/n) ")
-        max_players_filter = input("Filter by max players? (y/n) ")
+        online_filter = input("Filter by online servers? (y/n) ").lower()
+        max_players_filter = input("Filter by max players? (y/n) ").lower()
         if max_players_filter == 'y':
-            max_players_filter_value = input("Max players filter value (e.g. 10): ")
-        server_type_filter = input("Filter by server type? (grass/diamond/km/all) ")
-        online_mode_filter = input("Filter by online mode? (y/n) ")
-        plugins_filter = input("Filter by plugins? (y/n) ")
+            max_players_filter_value = int(input("Max players filter value (e.g. 10): "))
+        server_type_filter = input("Filter by server type? (grass/diamond/km/all) ").lower()
+        online_mode_filter = input("Filter by online mode? (y/n) ").lower()
+        server_version_filter = input("Filter by server version? (y/n) ").lower()
+        if server_version_filter == 'y':
+            server_version_filter_value = input("Server version (e.g. 1.15.2): ")
+        plugins_filter = input("Filter by plugins? (y/n) ").lower()
         if plugins_filter == 'y':
             print("Please type the plugin name, e.g. EssentialsX.")
             print("If you want to finish, type \"end\".")
@@ -87,6 +92,8 @@ def main():
                     continue
                 if online_mode_filter == 'y' and not server.online_mode:
                     continue
+                if server_version_filter == 'y' and not server.version == server_version_filter_value:
+                    continue
                 if plugins_filter == 'y' and not any(plugin in server.plugins for plugin in filtered_plugins):
                     continue
             try:
@@ -101,7 +108,9 @@ def main():
                                        "Type: {}\n".format(server.type) +
                                        "Expiration date: {}\n".format(
                                            "none" if server.expiration_date is None else server.expiration_date) +
-                                       "Price: {}\n".format("none" if server.price is None else server.price))
+                                       "Price: {}\n".format("none" if server.price is None else server.price) +
+                                       "Wallet: {}\n".format("none" if server.wallet is None else server.wallet) +
+                                       "Version: {}\n".format("none" if server.version is None else server.version))
                         if server.special_query:
                             log_file.write("Plugin list: {}".format(
                                 ', '.join([str(plugin) for plugin in server.plugins])))
@@ -118,6 +127,8 @@ def main():
                     print("Expiration date: {}".format(
                         "none" if server.expiration_date is None else server.expiration_date))
                     print("Price: {}".format("none" if server.price is None else server.price))
+                    print("Wallet: {}".format("none" if server.wallet is None else server.wallet))
+                    print("Version: {}".format("none" if server.version is None else server.version))
                     if server.special_query:
                         print("Plugin list: {}".format(', '.join([str(plugin) for plugin in server.plugins])))
                     color_print(Fore.RED, "----- END -----")
