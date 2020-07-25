@@ -137,7 +137,8 @@ def main():
             except (AttributeError, UnicodeEncodeError):
                 color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server.id))
         except ServerDoesNotExist:
-            pass
+            if verbosity == 'y':
+                color_print(Fore.RED, "This server does not exist. Skipping {}...".format(server_id))
 
 
 if __name__ == '__main__':

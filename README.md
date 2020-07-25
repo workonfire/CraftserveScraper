@@ -6,10 +6,14 @@ A simple tool for massive Craftserve servers analysis.
 
 ## Features
 - File logging
-- Searching servers through a certain ID range
+- Searching for servers that meet a custom criteria through a certain ID range
 ### Filtering
 - By online mode
 - By maximum amount of online players
 - By server type (`Grass`, `Diamond`, `Km`)
-- By premium mode (`online-mode=true`)
-- By plugin names and specific versions
+- By server version
+- By premium mode (`online-mode=true`) (warning - slow)
+- By plugin names (warning - slow)
+
+## Ports
+- JavaScript - [MinerPL/csrvScraper](https://github.com/MinerPL/csrvScraper)
