@@ -50,21 +50,27 @@ class Server:
         self.online_now = online_now
         self.max_online = max_online
 
-        # Using REST API.
         if self.running:
             rest_request_headers = {"Accept": "application/json"}
             try:
                 rest_request = requests.get("https://craftserve.pl/s/" + str(self.id), headers=rest_request_headers,
-                                            verify=False).json()
-                self.version = rest_request['engine'][1]
-                self.wallet = str(rest_request['wallet']['float']) + " " + rest_request['wallet']['currency']
-                self.expiration_date = rest_request['expire_date']
+                                            verify=False)
+                if rest_request.status_code == 200:  # They unfortunately blocked the JSON API.
+                    rest_request_response = rest_request.json()
+                    self.version = rest_request_response['engine'][1]
+                    self.wallet = "{0} {1}".format(str(rest_request_response['wallet']['float']),
+                                                   rest_request_response['wallet']['currency'])
+                    self.expiration_date = rest_request_response['expire_date']
+                else:
+                    self.version = None
+                    self.wallet = None
+                    self.expiration_date = server_details[1]
             except JSONDecodeError:
                 pass
         else:
             self.version = None
             self.wallet = None
-            self.expiration_date = None
+            self.expiration_date = None if not self.running else server_details[1]
         try:
             self.type = server_details[0]
             self.price = server_details[1] if not self.running else server_details[2]

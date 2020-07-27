@@ -11,7 +11,7 @@ A simple tool for massive Craftserve servers analysis.
 - By online mode
 - By maximum amount of online players
 - By server type (`Grass`, `Diamond`, `Km`)
-- By server version
+- By server version (does not work anymore, they blocked a part of the API)
 - By premium mode (`online-mode=true`) (warning - slow)
 - By plugin names (warning - slow)
 
