@@ -15,5 +15,6 @@ A simple tool for massive Craftserve servers analysis.
 - By premium mode (`online-mode=true`) (warning - slow)
 - By plugin names (warning - slow)
 
-## Ports
-- JavaScript - [MinerPL/csrvScraper](https://github.com/MinerPL/csrvScraper)
+## Warning
+Using this program may be considered **illegal** by the Craftserve team.
+Use it at your **own responsibility**.
