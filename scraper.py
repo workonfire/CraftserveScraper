@@ -22,8 +22,8 @@ def main():
 
     for line in banner:
         color_print(Fore.GREEN, line)
-    print("\nScraper v{}".format(__VERSION__))
-    color_print(Fore.YELLOW, "by {}\n".format(__AUTHOR__))
+    print(f"\nScraper v{__VERSION__}")
+    color_print(Fore.YELLOW, f"by {__AUTHOR__}\n")
 
     while True:
         try:
@@ -74,7 +74,7 @@ def main():
     color_print(Fore.CYAN, "\nScraper launched!\n")
     for server_id in range(int(lower_bound), int(upper_bound)):
         try:
-            print("Querying {}/{}...".format(str(server_id), upper_bound))
+            print(f"Querying {str(server_id)}/{upper_bound}...")
 
             server = Server(server_id, special_query=special_query)
 
@@ -92,42 +92,39 @@ def main():
                         continue
                 if logging == 'y':
                     with open('logs.txt', 'a') as log_file:
-                        log_file.write("[" + strftime("%d.%m.%Y %H:%M:%S") + "] ----- MATCH FOUND! -----\n"
-                                       "ID: {}\n".format(server.id) +
-                                       "Name: {}\n".format(server.name) +
-                                       "Address: {}\n".format("none" if server.address is None else server.address) +
-                                       "Is running: {}\n".format("yes" if server.running else "no") +
-                                       "Players: {}/{}\n".format(str(server.online_now), str(server.max_online)) +
-                                       "Type: {}\n".format(server.type) +
-                                       "Expiration date: {}\n".format(
-                                           "none" if server.expiration_date is None else server.expiration_date) +
-                                       "Price: {}\n".format("none" if server.price is None else server.price))
+                        log_file.write(f"[{strftime('%d.%m.%Y %H:%M:%S')}] ----- MATCH FOUND! -----\n" +
+                                       f"ID: {server.id}\n" +
+                                       f"Name: {server.name}\n" +
+                                       f"Address: {'none' if server.address is None else server.address}\n" +
+                                       f"Is running: {'yes' if server.running else 'no'}\n" +
+                                       f"Players: {str(server.online_now)}/{str(server.max_online)}\n" +
+                                       f"Type: {server.type}\n" +
+                                       f"Expiration date: {'none' if server.expiration_date is None else server.expiration_date}\n" +
+                                       f"Price: {'none' if server.price is None else server.price}\n")
                         if server.special_query:
-                            log_file.write("Plugin list: {}".format(
-                                ', '.join([str(plugin) for plugin in server.plugins])))
+                            log_file.write(f"Plugin list: {', '.join([str(plugin) for plugin in server.plugins])}")
                         log_file.write("\n")
 
                 if verbosity == 'y':
                     color_print(Fore.GREEN, "----- MATCH FOUND! -----")
-                    print("ID: {}".format(server.id))
-                    print("Name: {}".format(server.name))
-                    print("Address: {}".format("none" if server.address is None else server.address))
-                    print("Is running: {}".format("yes" if server.running else "no"))
-                    print("Players: {}/{}".format(str(server.online_now), str(server.max_online)))
-                    print("Type: {}".format(server.type))
-                    print("Expiration date: {}".format(
-                        "none" if server.expiration_date is None else server.expiration_date))
-                    print("Price: {}".format("none" if server.price is None else server.price))
+                    print(f"ID: {server.id}")
+                    print(f"Name: {server.name}")
+                    print(f"Address: {'none' if server.address is None else server.address}")
+                    print(f"Is running: {'yes' if server.running else 'no'}")
+                    print(f"Players: {str(server.online_now)}/{str(server.max_online)}")
+                    print(f"Type: {server.type}")
+                    print(f"Expiration date: {'none' if server.expiration_date is None else server.expiration_date}")
+                    print(f"Price: {'none' if server.price is None else server.price}")
                     if server.special_query:
-                        print("Plugin list: {}".format(', '.join([str(plugin) for plugin in server.plugins])))
+                        print(f"Plugin list: {', '.join([str(plugin) for plugin in server.plugins])}")
                     color_print(Fore.RED, "----- END -----")
                 else:
                     color_print(Fore.GREEN, "MATCH FOUND: " + str(server.id))
             except (AttributeError, UnicodeEncodeError):
-                color_print(Fore.RED, "Something weird happened. Skipping {}...".format(server.id))
+                color_print(Fore.RED, f"Something weird happened. Skipping {server.id}...")
         except ServerDoesNotExist:
             if verbosity == 'y':
-                color_print(Fore.RED, "This server does not exist. Skipping {}...".format(server_id))
+                color_print(Fore.RED, f"This server does not exist. Skipping {server_id}...")
 
 
 if __name__ == '__main__':

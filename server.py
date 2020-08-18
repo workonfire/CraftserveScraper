@@ -25,14 +25,14 @@ class Server:
         try:
             server_name = soup.find("meta", property="og:title")['content']
         except TypeError:
-            raise ServerDoesNotExist("The server with the given ID ({}) does not exist.".format(self.id))
+            raise ServerDoesNotExist(f"The server with the given ID ({self.id}) does not exist.")
         server_state = soup.find("div", id="status").getText()
         online_now = int(soup.find("div", {"class": "progress-bar"})['aria-valuemin'])
         max_online = int(
             str(soup.find("span", {"style": "font-weight: bold;font-size: 16px;color: #9f9f9f;"}).getText()).strip("/"))
         self.running = True if server_state == "ON" else False
 
-        primitive_address_value = "s{}.csrv.pl".format(self.id)
+        primitive_address_value = f"s{self.id}.csrv.pl"
         if primitive_address:
             server_address = primitive_address_value
         else:
@@ -58,8 +58,8 @@ class Server:
                 if rest_request.status_code == 200:  # They unfortunately blocked the JSON API.
                     rest_request_response = rest_request.json()
                     self.version = rest_request_response['engine'][1]
-                    self.wallet = "{0} {1}".format(str(rest_request_response['wallet']['float']),
-                                                   rest_request_response['wallet']['currency'])
+                    self.wallet = f"{str(rest_request_response['wallet']['float'])} \
+                     {rest_request_response['wallet']['currency']}"
                     self.expiration_date = rest_request_response['expire_date']
                 else:
                     self.version = None
